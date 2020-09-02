@@ -19,7 +19,7 @@ struct FirstView: View {
     @State private var name = ""
     @State private var showingImagePicker = false
     
-    
+    @State private var showAlert = false
     
     let locationFetcher = LocationFetcher()
     
@@ -60,6 +60,9 @@ struct FirstView: View {
                 self.saveImage(image: safeImage)
             })
                 .navigationBarTitle("ImageSaver")
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Yay!"), message: Text("Image Saved to local storage"), dismissButton: .default(Text("OK")))
+            }
             
             
         }
@@ -74,6 +77,7 @@ struct FirstView: View {
             do {
                 try jpegData.write(to: imagePath, options: [.atomic, .completeFileProtection])
                 imageManager.savedImages.append(imageModel)
+                self.showAlert = true
             } catch {
                 print("Error: \(error.localizedDescription)")
             }
